@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+    <meta charset="utf-8">
+    <title>Firecrackers</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      angular.module('app', [])
+        .controller('HomeController', function ($http, $scope) {
+          $http.get("/api").then(function (response) {
+            $http.get(response.data.firecrackers).then(function (response) {
+              $scope.firecrackers = response.data
+            })
+          })
+
+          $scope.getCrackin = function (firecracker) {
+            $http.get(firecracker.links.get).then(function (response) {
+              alert(response.data.attributes.name)
+            })
+          }
+        })
+    </script>
+  </head>
+  <body ng-controller="HomeController">
+    <div ng-repeat="firecracker in firecrackers">
+      <a href="#" ng-click="getCrackin(firecracker)">{{firecracker.attributes.name}}</a>
+      <span ng-if="firecracker.links.update">
+        (update me!!!)
+      </span>
+    </div>
+  </body>
+</html>
